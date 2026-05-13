@@ -1,0 +1,5 @@
+# VAULT: The Universal AI Data Privacy Gateway
+- Description: A zero-trust, browser-side tool to anonymize Excel/CSV data for safe AI use.
+- Core Feature: Synthetic Data Mirroring (replaces PII with realistic fake data).
+- Privacy: 100% client-side via WASM. No data ever reaches a server.
+- Slogan: "Vault your data. Keep your job."
