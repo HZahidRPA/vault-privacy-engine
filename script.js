@@ -5,7 +5,7 @@ const overlay = document.getElementById('loading-overlay');
 const progressText = document.getElementById('progress-text');
 
 // PRODUCTION DEPLOYMENT: Strict relative path and static versioning for Vercel Edge Cache
-const worker = new Worker('./vault-worker.js?v=1.0.0');
+const worker = new Worker('./vault-worker.js?v=1.0.1');
 
 worker.postMessage({ type: 'init' });
 
