@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vault-secure-core-v1';
+const CACHE_NAME = 'vault-secure-core-v2';
 
 // We install the worker and immediately take control
 self.addEventListener('install', (event) => {
