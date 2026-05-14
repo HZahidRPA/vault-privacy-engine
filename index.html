@@ -1,152 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- 1. HIGH-SPEED NETWORK PRE-CONNECTS -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VAULT | The Ultimate AI Data Privacy Gateway</title>
+    <title>VAULT | Enterprise Data Defense Protocol</title>
     
-    <!-- Generative Engine Optimization (GEO) -->
-    <meta name="description" content="VAULT: The #1 tool to mirror sensitive data for AI. 100% private, browser-side PII scrubbing. Vault your data, keep your job.">
+    <meta name="description" content="Use AI safely. VAULT is the global standard for instantly scrubbing personal secrets and legal risks from your files locally.">
     
-    <!-- Tailwind CSS -->
+    <!-- 2. STYLESHEET OPTIMIZATION (Tailwind + Inter Font) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .bg-grid {
-            background-size: 40px 40px;
-            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+        body { 
+            font-family: 'Inter', sans-serif; 
+            -webkit-font-smoothing: antialiased; 
+            background-color: #020617; /* Deep Slate - Elite Security Standard */
+            color: #f8fafc;
         }
+        
+        /* Tactical Grid Background - Subconscious Tech Authority */
+        .bg-grid {
+            background-size: 50px 50px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+        
+        /* Premium Glassmorphism */
+        .glass-panel { 
+            background: rgba(15, 23, 42, 0.5); 
+            backdrop-filter: blur(24px); 
+            -webkit-backdrop-filter: blur(24px); 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Fluid Animations */
+        #loading-overlay { display: flex; opacity: 1; transition: opacity 0.4s ease; }
+        #loading-overlay.hidden { display: none; opacity: 0; pointer-events: none; }
+        
+        .glow-text-red { text-shadow: 0 0 35px rgba(220, 38, 38, 0.6); }
+        .glow-box-blue { box-shadow: 0 0 40px rgba(37, 99, 235, 0.15); }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 overflow-x-hidden flex flex-col min-h-screen">
+<body class="overflow-x-hidden flex flex-col min-h-screen relative">
 
-    <!-- Premium Navigation -->
-    <nav class="w-full border-b border-slate-200 bg-white/80 backdrop-blur-md fixed top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
-                <h1 class="text-3xl font-black tracking-tighter">VAULT</h1>
+    <!-- Ambient UI Glows -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-red-600/10 blur-[150px] pointer-events-none z-0"></div>
+    <div class="bg-grid absolute inset-0 z-0 pointer-events-none opacity-60"></div>
+
+    <!-- THE ENTERPRISE TRAP (Navigation) -->
+    <nav class="w-full glass-panel fixed top-0 z-50 transition-all duration-300 border-b border-white/5 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-6 h-24 flex justify-between items-center">
+            <!-- Brand Identity -->
+            <div class="flex items-center gap-4 group cursor-pointer">
+                <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.15)] group-hover:scale-105 transition-transform duration-300">
+                    <svg class="w-7 h-7 text-slate-950" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-black tracking-tighter uppercase leading-none">VAULT</h1>
+                    <span class="text-[10px] text-emerald-500 font-bold uppercase tracking-[0.3em] flex items-center gap-2 mt-1">
+                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                        Client-Side Active
+                    </span>
+                </div>
             </div>
             
-            <div class="flex items-center gap-4 md:gap-6">
-                <!-- Free Tier Badge -->
-                <span class="hidden md:inline-block text-xs font-bold uppercase tracking-widest text-slate-400">Web Version: Free</span>
-                
-                <!-- The Monetization Hook -->
-                <a href="mailto:hzahid.cedar@gmail.com?subject=VAULT%20Enterprise%20API%20Inquiry&body=Hi%20Huraira,%0A%0AI%20am%20interested%20in%20integrating%20the%20VAULT%20privacy%20engine%20into%20our%20internal%20automated%20workflows.%20Please%20send%20pricing%20details." 
-                   class="bg-slate-900 text-white px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wide hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/20">
-                   Get Enterprise API
+            <!-- The Upsell Button (Engineered for High-Ticket Clicks) -->
+            <div class="flex items-center gap-6">
+                <a href="mailto:hzahid.cedar@gmail.com?subject=Unlimited%20Enterprise%20License%20Inquiry" 
+                   class="bg-gradient-to-r from-slate-800 to-slate-900 text-white px-8 py-4 rounded-full text-xs font-black uppercase tracking-[0.2em] hover:from-red-600 hover:to-red-800 transition-all duration-500 shadow-xl hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] border border-slate-700 hover:border-red-500 transform hover:-translate-y-0.5">
+                    GET UNLIMITED BUSINESS LICENSE
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content Area -->
-    <main class="flex-grow pt-32 pb-20 relative bg-grid">
-        <!-- Background Glow -->
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-500/10 blur-[100px] rounded-full pointer-events-none"></div>
-
-        <div class="max-w-4xl mx-auto text-center px-6 relative z-10">
-            <h2 class="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-[1.1]">
-                Vault your data.<br>
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">Keep your job.</span>
+    <main class="flex-grow pt-48 pb-24 relative z-10">
+        <div class="max-w-5xl mx-auto text-center px-6">
+            
+            <!-- THE HOOK (The Power Shift - Professional & Dominant) -->
+            <h2 class="text-6xl md:text-[7rem] lg:text-[8rem] font-black mb-6 tracking-tighter leading-[0.85] text-white">
+                USE AI. <br>
+                <span class="text-red-500 glow-text-red">DON’T LET IT USE YOU.</span>
             </h2>
-            <p class="text-xl text-slate-500 mb-12 max-w-2xl mx-auto font-medium">
-                The global standard for safe AI data mirroring. Generate synthetic datasets instantly. <strong class="text-slate-800">100% private. Processing happens entirely on your device.</strong>
+
+            <!-- THE PSYCHOLOGICAL BRIDGE (Dual-Trigger: Consumer & Enterprise) -->
+            <p class="text-xl md:text-2xl text-slate-400 mb-16 max-w-4xl mx-auto font-medium leading-relaxed">
+                Stop exposing your life. Every file makes AI smarter.<br class="hidden md:block">
+                <span class="text-white font-black border-b-2 border-red-400 pb-1">Your secrets stay on your screen.</span> 
+                VAULT erases your private info and legal threats before the internet ever sees your files.
             </p>
             
-            <!-- End-Game Drag & Drop Zone -->
-            <div id="drop-zone" class="mx-auto max-w-2xl border-2 border-dashed border-slate-300 rounded-3xl p-16 bg-white/80 backdrop-blur-sm hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer shadow-lg relative overflow-hidden group">
-                <div id="ui-content" class="space-y-6">
-                    <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto transform group-hover:-translate-y-2 transition-transform duration-300 shadow-inner">
-                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-bold text-slate-800">Drop Excel or CSV here</p>
-                        <p class="text-sm text-slate-500 mt-2 font-medium">or click to browse your local files</p>
-                    </div>
-                </div>
+            <!-- THE SHIELD (Action Zone - Engineered for Absolute Trust) -->
+            <div id="drop-zone" class="mx-auto max-w-3xl border-2 border-dashed border-slate-700 rounded-[2.5rem] p-16 md:p-24 glass-panel glow-box-blue hover:border-blue-500 hover:bg-slate-800/60 transition-all duration-500 cursor-pointer relative overflow-hidden group">
                 
-                <!-- Progress Overlay -->
-                <div id="loading-overlay" class="absolute inset-0 bg-slate-900/90 flex flex-col items-center justify-center hidden backdrop-blur-sm transition-all duration-300">
-                    <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                    <p id="progress-text" class="mt-6 font-bold text-white uppercase tracking-widest text-sm drop-shadow-md">Initializing Secure Core...</p>
+                <div id="ui-content" class="space-y-6 relative z-10 flex flex-col items-center">
+                     <div class="w-24 h-24 bg-slate-950 text-blue-500 rounded-3xl flex items-center justify-center shadow-[inset_0_0_20px_rgba(37,99,235,0.2)] group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 group-hover:shadow-[0_0_40px_rgba(37,99,235,0.6)] transition-all duration-500 border border-slate-800">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                     </div>
+                     <div>
+                        <p class="text-3xl md:text-5xl font-black text-white tracking-tight">DROP FILE TO SCRUB</p>
+                        <p class="text-xs text-slate-500 font-bold uppercase mt-4 tracking-[0.4em]">100% Secure Local Processing</p>
+                     </div>
+                </div>
+
+                <!-- THE LOADING OVERLAY (Red Alert Defense Mode) -->
+                <div id="loading-overlay" class="absolute inset-0 bg-slate-950/95 backdrop-blur-3xl flex flex-col items-center justify-center z-20 hidden">
+                    <div class="relative w-24 h-24 mb-8">
+                        <div class="absolute inset-0 border-4 border-slate-800 rounded-full"></div>
+                        <div class="absolute inset-0 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                    <p id="progress-text" class="text-sm font-black tracking-[0.5em] text-red-500 uppercase drop-shadow-md">ANNIHILATING SECRETS...</p>
+                </div>
+
+                <!-- THE SUCCESS STATE OVERLAY (Green Clearance Mode) -->
+                <div id="success-state" class="absolute inset-0 bg-slate-950/95 backdrop-blur-3xl flex flex-col items-center justify-center z-30 hidden transition-all duration-500">
+                    <div class="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-3xl flex items-center justify-center mb-6 border border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.3)]">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <p class="text-2xl md:text-3xl font-black text-white tracking-widest mb-2">THREAT NEUTRALIZED</p>
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-[0.4em] mb-8">File Secured & Ready</p>
+                    <button id="download-btn" class="bg-emerald-600 text-white px-10 py-4 rounded-full font-black text-xs uppercase tracking-[0.2em] hover:bg-emerald-500 transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] transform hover:-translate-y-1">
+                        SAVE SECURE FILE
+                    </button>
+                    <button id="reset-btn" class="mt-6 text-[10px] text-slate-500 hover:text-white uppercase tracking-[0.2em] font-bold transition-colors">
+                        Process Another File
+                    </button>
                 </div>
             </div>
 
-            <input type="file" id="file-input" class="hidden" accept=".csv, .xlsx">
+            <input type="file" id="file-input" class="hidden" accept=".csv, .xlsx, .xls">
             
-            <!-- Status Bar -->
-            <div id="status-bar" class="mt-8 inline-block bg-slate-100 px-6 py-2 rounded-full text-xs font-mono text-slate-500 uppercase tracking-[0.2em] border border-slate-200">
-                <span class="inline-block w-2 h-2 bg-amber-500 rounded-full mr-2 animate-pulse"></span> Engine Status: Waking up...
+            <!-- THE AUTHORITY STATUS -->
+            <div id="status-bar" class="mt-14 inline-flex items-center glass-panel px-8 py-4 rounded-full text-[11px] font-black text-white uppercase tracking-[0.3em] shadow-2xl transition-all border border-slate-700">
+                <span class="relative flex h-3 w-3 mr-4">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                </span>
+                DEFENSE ENGINE: BOOTING...
             </div>
         </div>
 
-        <!-- Trust Features Section -->
-        <div class="max-w-5xl mx-auto mt-24 px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
-                <div class="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4">
+        <!-- THE VALUE PILLARS (Irrefutable Logic) -->
+        <div class="max-w-6xl mx-auto mt-32 px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Pillar 1 -->
+            <div class="glass-panel p-10 rounded-3xl hover:-translate-y-2 transition-transform duration-500 group border border-slate-800 hover:border-slate-600">
+                <div class="w-14 h-14 bg-slate-900 text-white rounded-2xl flex items-center justify-center mb-8 border border-slate-700 group-hover:border-red-500 group-hover:text-red-500 transition-colors shadow-inner">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                </div>
+                <h3 class="font-black text-2xl mb-4 text-white tracking-tight">1. Fake Your Identity</h3>
+                <p class="text-slate-400 font-medium leading-relaxed text-sm">We automatically swap real names and numbers with synthetic twins. You get AI insights; the AI gets a ghost.</p>
+            </div>
+            <!-- Pillar 2 -->
+            <div class="glass-panel p-10 rounded-3xl hover:-translate-y-2 transition-transform duration-500 group border border-slate-800 hover:border-slate-600">
+                <div class="w-14 h-14 bg-slate-900 text-white rounded-2xl flex items-center justify-center mb-8 border border-slate-700 group-hover:border-emerald-500 group-hover:text-emerald-500 transition-colors shadow-inner">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                 </div>
-                <h3 class="font-bold text-lg mb-2">GDPR & HIPAA Safe</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">No data ever leaves your computer. Our WASM engine processes everything locally in your browser's memory.</p>
+                <h3 class="font-black text-2xl mb-4 text-white tracking-tight">2. 100% Invisible</h3>
+                <p class="text-slate-400 font-medium leading-relaxed text-sm">No servers. No cloud uploads. The cleaning happens right on your device. It is mathematically impossible to spy on you.</p>
             </div>
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
-                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
+            <!-- Pillar 3 -->
+            <div class="glass-panel p-10 rounded-3xl hover:-translate-y-2 transition-transform duration-500 group border border-slate-800 hover:border-slate-600">
+                <div class="w-14 h-14 bg-slate-900 text-white rounded-2xl flex items-center justify-center mb-8 border border-slate-700 group-hover:border-blue-500 group-hover:text-blue-500 transition-colors shadow-inner">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
                 </div>
-                <h3 class="font-bold text-lg mb-2">Smart Data Masking</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">Replaces PII with high-fidelity synthetic data, preserving mathematical relationships and date structures for AI.</p>
-            </div>
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
-                <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <h3 class="font-bold text-lg mb-2">Instant Execution</h3>
-                <p class="text-sm text-slate-500 leading-relaxed">Built on a multi-threaded Web Worker architecture. Zero server lag, unlimited file size potential, $0 processing cost.</p>
+                <h3 class="font-black text-2xl mb-4 text-white tracking-tight">3. Keeps Work Perfect</h3>
+                <p class="text-slate-400 font-medium leading-relaxed text-sm">Your Excel rows and math stay exactly the same. Only the private secrets and legal liabilities are erased.</p>
             </div>
         </div>
+        
+        <!-- PREMIUM CUSTOM MODAL -->
+        <div id="vault-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-6 bg-slate-950/80 backdrop-blur-md transition-all duration-300">
+            <div class="glass-panel max-w-md w-full p-8 rounded-[2.5rem] border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
+                <div class="flex flex-col items-center text-center">
+                    <!-- Dynamic Icon Container -->
+                    <div id="modal-icon-bg" class="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-2xl">
+                        <svg id="modal-icon" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
+                    </div>
+                    
+                    <h3 id="modal-title" class="text-2xl font-black text-white uppercase tracking-tighter mb-3"></h3>
+                    <p id="modal-message" class="text-slate-400 font-medium leading-relaxed mb-8 text-sm"></p>
+                    
+                    <div class="flex flex-col w-full gap-3">
+                        <button onclick="closeVaultModal()" class="w-full py-4 rounded-xl font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white transition-all">
+                            Dismiss
+                        </button>
+                        <a id="modal-action-btn" href="mailto:hzahid.cedar@gmail.com?subject=Enterprise%20Upgrade" 
+                           class="hidden w-full py-4 rounded-xl font-black text-xs uppercase tracking-widest bg-red-600 text-white hover:bg-red-500 shadow-lg shadow-red-600/20 transition-all text-center">
+                            Get Unlimited License
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-8 text-center text-sm text-slate-400 font-medium">
-        <p>&copy; 2026 VAULT Privacy Engine. Enterprise-Grade Client-Side Scrubbing.</p>
+    <!-- Auto-updating Year Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-10 text-center text-[10px] text-slate-600 font-black uppercase tracking-[0.4em] relative z-10">
+        <p>&copy; <span id="current-year"></span> VAULT Protocol | Engineered for absolute confidentiality</p>
     </footer>
 
-    <!-- Your existing JS -->
-    <script src="script.js"></script>
+    <!-- 3. LOAD SCRIPTS WITH DEFER FOR MAX EFFICIENCY -->
+    <script src="script.js" defer></script>
     
-    <!-- Small UI Script to handle the status indicator light -->
     <script>
-        // Update the status dot color when engine is ready
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.target.innerText.includes("Ready")) {
-                    mutation.target.innerHTML = '<span class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2 shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>' + mutation.target.innerText;
-                }
-            });
-        });
-        observer.observe(document.getElementById('status-bar'), { characterData: false, childList: true, attributes: false });
-    </script>
+        // Auto-update the copyright year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
 
-   <!-- END-GAME UPGRADE: Progressive Web App (PWA) Service Worker -->
-    <script>
+        // Psychological Status Indicator Logic
+        const statusBar = document.getElementById('status-bar');
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.target.innerText.toUpperCase().includes("READY")) {
+                    mutation.target.innerHTML = `
+                        <span class="relative flex h-3 w-3 mr-4">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-3 w-3 bg-red-600 shadow-[0_0_15px_rgba(220,38,38,1)]"></span>
+                        </span>
+                        DEFENSE CORE: ARMED & READY
+                    `;
+                    statusBar.classList.remove('border-slate-700');
+                    statusBar.classList.add('border-red-900', 'bg-red-950/40');
+                    observer.disconnect(); 
+                }
+            }
+        });
+        observer.observe(statusBar, { childList: true, characterData: true, subtree: true });
+
+        // Service Worker (Cache Engine)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then((registration) => {
-                        console.log('VAULT Cache Engine Active:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.log('Cache Engine Failed:', error);
-                    });
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
             });
         }
     </script>
-</body>
-</html>
 </body>
 </html>

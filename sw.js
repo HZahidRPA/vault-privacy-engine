@@ -1,39 +1,77 @@
-const CACHE_NAME = 'vault-secure-core-v2';
+/**
+ * VAULT CACHE ENGINE - Service Worker v2.1
+ * Strategy: Cache-First for Heavy Assets / Stale-While-Revalidate for UI
+ */
 
-// We install the worker and immediately take control
+const CACHE_NAME = 'vault-protocol-v4-dark-apex';
+
+// Assets that must be cached immediately for instant boot
+const PRE_CACHE_ASSETS = [
+    './',
+    './index.html',
+    './script.js',
+    './vault-worker.js',
+    'https://cdn.tailwindcss.com'
+];
+
 self.addEventListener('install', (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.addAll(PRE_CACHE_ASSETS);
+        })
+    );
     self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-    event.waitUntil(clients.claim());
-});
-
-// The "Network-First, Cache-Fallback" Strategy
-self.addEventListener('fetch', (event) => {
-    // Only intercept GET requests
-    if (event.request.method !== 'GET') return;
-
-    event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-                // If we have the massive Python files saved, return them instantly!
-                return cachedResponse;
-            }
-
-            // Otherwise, fetch from the internet and save it for next time
-            return fetch(event.request).then((networkResponse) => {
-                // Only cache successful requests from our site or the Pyodide CDN
-                if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic' || event.request.url.includes('cdn.jsdelivr.net')) {
-                    const responseToCache = networkResponse.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, responseToCache);
-                    });
-                }
-                return networkResponse;
-            }).catch(() => {
-                // Ignore errors (prevents crashing if offline)
-            });
+    // Clear old versions of VAULT to free up user disk space
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((name) => {
+                    if (name !== CACHE_NAME) return caches.delete(name);
+                })
+            );
         })
     );
+    self.skipWaiting();
+});
+
+self.addEventListener('fetch', (event) => {
+    if (event.request.method !== 'GET') return;
+
+    const url = event.request.url;
+
+    // STRATEGY: Cache-First for the Heavy Python Runtime (CDN)
+    // Once your friend downloads the 10MB Pyodide engine once, 
+    // he will NEVER have to wait for it again.
+    if (url.includes('cdn.jsdelivr.net') || url.includes('pyodide')) {
+        event.respondWith(
+            caches.match(event.request).then((cachedResponse) => {
+                if (cachedResponse) return cachedResponse;
+                
+                return fetch(event.request).then((networkResponse) => {
+                    return caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, networkResponse.clone());
+                        return networkResponse;
+                    });
+                });
+            })
+        );
+    } 
+    // STRATEGY: Stale-While-Revalidate for UI files
+    // Shows the app instantly, but updates it in the background if you push a fix.
+    else {
+        event.respondWith(
+            caches.match(event.request).then((cachedResponse) => {
+                const fetchPromise = fetch(event.request).then((networkResponse) => {
+                    return caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, networkResponse.clone());
+                        return networkResponse;
+                    });
+                });
+                return cachedResponse || fetchPromise;
+            })
+        );
+    }
 });
