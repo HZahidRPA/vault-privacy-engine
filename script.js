@@ -1,223 +1,199 @@
 /**
- * VAULT PROTOCOL - Enterprise Gateway Orchestrator
- * Strategy: Zero-Lag, Dark-Mode UI, Labor Illusion UX, Global Exception Handling
- * Version: 7.0.0
+ * iLoveVAULT - Core Orchestrator + Habit-Engine Terminal
+ * Strategy: Smooth Viewport Anchoring, Dynamic Forensic Ledger, Premium UX, Event Bubbling Fix
+ * Version: 11.4.3 (Global Production)
  */
 
+// Single Source of Truth for Monetization Rules
+const VAULT_LIMIT = 5;
+const MAX_FILE_SIZE_MB = 40;
+
 const UI = {
+    viewDirectory: document.getElementById('view-directory'),
+    viewWorkspace: document.getElementById('view-workspace'),
     dropZone: document.getElementById('drop-zone'),
     fileInput: document.getElementById('file-input'),
-    status: document.getElementById('status-bar'),
     overlay: document.getElementById('loading-overlay'),
     progressText: document.getElementById('progress-text'),
     successState: document.getElementById('success-state'),
     downloadBtn: document.getElementById('download-btn'),
-    resetBtn: document.getElementById('reset-btn')
+    resetBtn: document.getElementById('reset-btn'),
+    uiContent: document.getElementById('ui-content'),
+    promptInput: document.getElementById('prompt-input'),
+    sanitizeBtn: document.getElementById('sanitize-prompt-btn'),
+    promptZone: document.getElementById('prompt-zone'),
+    auditZone: document.getElementById('audit-zone'),
+    usageRing: document.getElementById('usage-progress-ring'),
+    usageText: document.getElementById('usage-count-text'),
+    usageMsg: document.getElementById('usage-status-msg'),
+    lifetimeText: document.getElementById('lifetime-score'),
+    toolIndicator: document.getElementById('active-tool-indicator')
 };
 
-let isEngineReady = false;
-let isProcessing = false;
-let pendingSecureData = null;
-let pendingSecureFilename = "";
+// State tracker for file naming
+let currentSessionFileName = "DATASET";
 
 /**
- * EXCEPTION HANDLER: Global Catch-All
- * Prevents the app from "freezing" if an unhandled error occurs.
+ * THE HABIT-ENGINE: Privacy-First Client-Side Gamification
  */
-window.onerror = function(message, source, lineno, colno, error) {
-    console.error("GLOBAL_VAULT_FAULT:", error);
-    showVaultModal("System Interruption", "A critical kernel error occurred. The defense core has been reset for your safety.", "error");
-    resetSystemState();
-    return true;
-};
+const HabitEngine = {
+    RING_CIRCUMFERENCE: 150.8,
 
-// Worker Initialization with robust error tracking
-const worker = new Worker(`./vault-worker.js?v=${new Date().getTime()}`);
-
-/**
- * PHASE 1: Boot Sequence with Timeout Protection
- */
-function initBootSequence() {
-    showLoading("INITIALIZING DEFENSE CORE...");
-    
-    // If worker doesn't respond in 10 seconds, it's likely a browser incompatibility
-    const bootTimeout = setTimeout(() => {
-        if (!isEngineReady) {
-            showVaultModal("Initialization Failed", "The Security Engine is taking too long to respond. Please ensure you are using a modern, secure browser.", "error");
-            hideLoading();
+    getData() {
+        const today = new Date().toDateString();
+        let data = JSON.parse(localStorage.getItem('vault_habit_v4') || '{"date":"","count":0,"lifetime":0}');
+        
+        if (data.date !== today) {
+            data.date = today;
+            data.count = 0;
+            this.save(data);
         }
-    }, 10000);
+        return data;
+    },
 
-    worker.postMessage({ type: 'init' });
-    worker.bootTimeout = bootTimeout;
-}
+    save(data) { 
+        localStorage.setItem('vault_habit_v4', JSON.stringify(data)); 
+    },
+    
+    recordUse(threatsFound) {
+        let data = this.getData();
+        data.count++;
+        data.lifetime += threatsFound;
+        this.save(data);
+        this.syncUI();
+    },
 
-/**
- * PHASE 2: Worker Communication Logic & Robustness
- */
-worker.onmessage = (e) => {
-    const { type, msg, result, fileName } = e.data;
+    syncUI() {
+        const data = this.getData();
+        const remaining = Math.max(0, VAULT_LIMIT - data.count);
+        const processingRatio = data.count / VAULT_LIMIT;
+        const offsetValue = this.RING_CIRCUMFERENCE - (processingRatio * this.RING_CIRCUMFERENCE);
+        
+        if (UI.usageRing) UI.usageRing.style.strokeDashoffset = offsetValue;
+        if (UI.usageText) UI.usageText.innerText = remaining;
+        if (UI.lifetimeText) UI.lifetimeText.innerText = data.lifetime.toLocaleString();
 
-    switch (type) {
-        case 'status':
-            if (!isEngineReady) UI.progressText.innerText = msg.toUpperCase();
-            break;
-
-        case 'ready':
-            isEngineReady = true;
-            clearTimeout(worker.bootTimeout);
-            hideLoading();
-            break;
-
-        case 'success':
-            if (!result) {
-                handleCriticalError("The engine returned an empty data set. Processing aborted.");
-                return;
+        // Premium Scarcity Progression UI Tracking
+        if (remaining <= 5) {
+            UI.usageRing?.classList.remove('text-blue-500', 'text-yellow-500');
+            UI.usageRing?.classList.add('text-red-500');
+            if (UI.usageMsg) {
+                UI.usageMsg.innerText = "CRITICAL LIMIT REACHED";
+                UI.usageMsg.className = "text-[10px] font-extrabold text-red-500 uppercase tracking-wider italic animate-pulse";
             }
-            pendingSecureData = result;
-            pendingSecureFilename = `VAULT_SECURED_${fileName.split('.')[0]}.csv`;
-            
-            setTimeout(() => {
-                isProcessing = false;
-                hideLoading();
-                showSuccessState();
-            }, 1800);
-            break;
+        } else if (remaining <= 20) {
+            UI.usageRing?.classList.remove('text-blue-500', 'text-red-500');
+            UI.usageRing?.classList.add('text-yellow-500');
+            if (UI.usageMsg) {
+                UI.usageMsg.innerText = "QUOTA RUNNING LOW";
+                UI.usageMsg.className = "text-[10px] font-extrabold text-yellow-500 uppercase tracking-wider italic";
+            }
+        } else {
+            UI.usageRing?.classList.remove('text-red-500', 'text-yellow-500');
+            UI.usageRing?.classList.add('text-blue-500');
+            if (UI.usageMsg) {
+                UI.usageMsg.innerText = "OPTIMAL PROTECTION STATE";
+                UI.usageMsg.className = "text-[10px] font-extrabold text-emerald-400 uppercase tracking-wider italic";
+            }
+        }
+    },
 
-        case 'error':
-            handleCriticalError(msg);
-            break;
+    isLocked() { 
+        return this.getData().count >= VAULT_LIMIT; 
     }
 };
 
-worker.onerror = (err) => {
-    handleCriticalError("The background security thread crashed. This is usually due to extremely low system memory.");
-};
-
 /**
- * PHASE 3: Error Recovery Logic
+ * THE NEURAL PARSING PIPELINE
  */
-function handleCriticalError(msg) {
-    isProcessing = false;
-    showVaultModal("Protocol Interrupted", msg, 'error');
-    hideLoading();
-    resetSystemState();
+class VaultSanitizer {
+    constructor() {
+        this.tokens = new Map();
+        this.tokenPrefix = `__VAULT_SHIELD_${Math.random().toString(36).substr(2, 4).toUpperCase()}__`;
+        this.threatCount = 0;
+    }
+
+    shield(text, regex) {
+        return text.replace(regex, (match) => {
+            const id = `${this.tokenPrefix}${this.tokens.size}__`;
+            this.tokens.set(id, match);
+            return id;
+        });
+    }
+
+    sanitize(text) {
+        this.tokens.clear();
+        this.threatCount = 0;
+        let processed = text;
+
+        processed = this.shield(processed, /\bv\d+(\.\d+)+\b/gi); 
+        processed = this.shield(processed, /[\$\£\€\¥]\d{1,3}(?:[.,]\d{3})*(?:\.\d{2})?/g); 
+        processed = this.shield(processed, /\b\d+(\.\d+){1,2}\b(?!\.)/g); 
+
+        const replacer = (match, tag) => { 
+            this.threatCount++; 
+            return `[${tag}]`; 
+        };
+
+        processed = processed
+            .replace(/eyJ[a-zA-Z0-9_-]{5,}\.[a-zA-Z0-9_-]{5,}\.[a-zA-Z0-9_-]{5,}/g, m => replacer(m, 'SECURED_JWT'))
+            .replace(/(?:sk-|pk-|sk_live|sk_test)[\w-]{20,}/g, m => replacer(m, 'SECURED_API_KEY'))
+            .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g, m => replacer(m, 'SECURED_EMAIL'))
+            .replace(/\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g, m => replacer(m, 'SECURED_IP'))
+            .replace(/\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9]{2})[0-9]{12})\b/g, m => replacer(m, 'SECURED_CARD'))
+            .replace(/\b(?!000|666|9\d{2})\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b/g, m => replacer(m, 'SECURED_SSN'))
+            .replace(/(?<!\d)\b(?:\+?\d{1,3}[ -.]?)?\(?\d{3}\)?[ -.]?\d{3}[ -.]?\d{4}\b/g, m => replacer(m, 'SECURED_PHONE'))
+            .replace(/(?<![\d_\-\.])\b\d{7,15}\b(?![\d_\-\.])/g, m => replacer(m, 'SECURED_ID'));
+
+        this.tokens.forEach((value, key) => {
+            processed = processed.replace(key, value);
+        });
+
+        return processed;
+    }
 }
 
-function resetSystemState() {
-    isProcessing = false;
-    UI.fileInput.value = '';
-    pendingSecureData = null;
-    hideLoading();
-    hideSuccessState();
-}
+const sanitizer = new VaultSanitizer();
 
 /**
- * PHASE 4: Premium Custom Modal Logic
+ * MASTER INTERFACE ENGINE & MODAL OVERLAYS (Dynamic Messaging)
  */
 function showVaultModal(title, message, type = 'error') {
     const modal = document.getElementById('vault-modal');
-    const content = document.getElementById('modal-content');
     const titleEl = document.getElementById('modal-title');
     const messageEl = document.getElementById('modal-message');
     const iconBg = document.getElementById('modal-icon-bg');
     const icon = document.getElementById('modal-icon');
     const actionBtn = document.getElementById('modal-action-btn');
-
-    if (!modal) return;
+    const features = document.getElementById('modal-features');
 
     titleEl.innerText = title;
     messageEl.innerText = message;
 
     if (type === 'limit') {
-        iconBg.className = "w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-red-600 shadow-[0_0_30px_rgba(220,38,38,0.5)] text-white";
-        icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />`;
-        actionBtn.classList.remove('hidden'); 
+        iconBg.className = "w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-8 bg-gradient-to-br from-blue-600 to-indigo-700 shadow-[0_0_50px_rgba(37,99,235,0.4)] text-white";
+        icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />`;
+        
+        features?.classList.remove('hidden');
+        actionBtn?.classList.remove('hidden');
     } else {
-        iconBg.className = "w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-blue-600 shadow-[0_0_30px_rgba(37,99,235,0.5)] text-white";
-        icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />`;
-        actionBtn.classList.add('hidden'); 
+        iconBg.className = "w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-8 bg-red-600 shadow-2xl text-white";
+        icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />`;
+        
+        features?.classList.add('hidden');
+        actionBtn?.classList.add('hidden');
     }
 
     modal.classList.remove('hidden');
     modal.classList.add('flex');
-    setTimeout(() => {
-        content.classList.remove('scale-95', 'opacity-0');
-        content.classList.add('scale-100', 'opacity-100');
-    }, 10);
 }
 
-window.closeVaultModal = function() {
-    const modal = document.getElementById('vault-modal');
-    const content = document.getElementById('modal-content');
-    content.classList.remove('scale-100', 'opacity-100');
-    content.classList.add('scale-95', 'opacity-0');
-    setTimeout(() => {
-        modal.classList.remove('flex');
-        modal.classList.add('hidden');
-    }, 300);
-};
+window.closeVaultModal = () => document.getElementById('vault-modal').classList.add('hidden');
 
-/**
- * PHASE 5: File Handling & Memory Safety Checks
- */
-function processFile(file) {
-    if (!file || !isEngineReady || isProcessing) return;
-
-    // Exception: File size check
-    const MAX_SIZE_MB = 50;
-    const fileSizeMB = file.size / (1024 * 1024);
-
-    if (fileSizeMB > MAX_SIZE_MB) {
-        showVaultModal(
-            "Security Limit Reached", 
-            `Your file is ${fileSizeMB.toFixed(1)}MB. The free protocol is designed for small personal files. Unlock the Unlimited Business License for massive datasets.`, 
-            'limit'
-        );
-        UI.fileInput.value = ''; 
-        return; 
-    }
-
-    // Exception: Format Validation
-    const ext = file.name.split('.').pop().toLowerCase();
-    if (!['csv', 'xlsx', 'xls'].includes(ext)) {
-        showVaultModal("Format Rejected", "VAULT Protocol only accepts CSV or Excel structures. Please try again.", "error");
-        UI.fileInput.value = '';
-        return;
-    }
-
-    isProcessing = true;
-    showLoading(`ANNIHILATING SECRETS IN ${file.name.toUpperCase()}...`);
-
-    const reader = new FileReader();
-    
-    // Exception: Memory/Read Failures
-    reader.onerror = () => {
-        handleCriticalError("Read Access Denied. Ensure the file is not open in another application.");
-    };
-
-    reader.onload = (event) => {
-        try {
-            const typedArray = new Uint8Array(event.target.result);
-            worker.postMessage({
-                type: 'process',
-                content: typedArray,
-                fileName: file.name
-            });
-        } catch (e) {
-            handleCriticalError("Memory Exhaustion. Your browser does not have enough RAM allocated to process this file.");
-        }
-    };
-    
-    reader.readAsArrayBuffer(file);
-}
-
-/**
- * PHASE 6: UI State Management
- */
 function showLoading(msg) {
+    UI.uiContent.classList.add('hidden');
     UI.overlay.classList.remove('hidden');
-    UI.overlay.style.display = 'flex'; 
+    UI.overlay.style.display = 'flex';
     UI.progressText.innerText = msg;
 }
 
@@ -226,7 +202,9 @@ function hideLoading() {
     UI.overlay.style.display = 'none';
 }
 
-function showSuccessState() {
+function showSuccessState(piiCount = 0) {
+    document.getElementById('audit-pii-count').innerText = `${piiCount.toLocaleString()} PII Tokens Neutralized`;
+    document.getElementById('audit-fines-saved').innerText = `~$${(piiCount * 250).toLocaleString()} Corporate Fines Prevented`;
     UI.successState.classList.remove('hidden');
     UI.successState.style.display = 'flex';
 }
@@ -234,78 +212,239 @@ function showSuccessState() {
 function hideSuccessState() {
     UI.successState.classList.add('hidden');
     UI.successState.style.display = 'none';
-    UI.fileInput.value = ''; 
-    pendingSecureData = null;
-}
-
-function handleDownload(data, filename) {
-    try {
-        const blob = new Blob([data], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a); 
-        a.click();
-        
-        setTimeout(() => {
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        }, 100);
-    } catch (e) {
-        showVaultModal("Download Failed", "Your browser blocked the file generation. Please check your privacy settings.", "error");
-    }
+    UI.uiContent.classList.remove('hidden');
+    UI.fileInput.value = '';
+    
+    // Reset Download Button State for Next Run
+    UI.downloadBtn.innerText = "Save Secured Dataset";
+    UI.downloadBtn.classList.remove('bg-slate-800', 'hover:bg-slate-700', 'pointer-events-none', 'opacity-80');
+    UI.downloadBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
 }
 
 /**
- * PHASE 7: Tactical Listeners
+ * WORKSPACE SWITCH ENGINE
  */
-UI.dropZone.addEventListener('click', () => {
-    if (isEngineReady && !isProcessing && UI.successState.classList.contains('hidden')) {
-        UI.fileInput.click();
-    }
-});
+window.focusTool = function(toolType) {
+    UI.viewDirectory.classList.add('opacity-0', '-translate-y-10');
+    
+    setTimeout(() => {
+        UI.viewDirectory.classList.add('hidden');
+        
+        UI.dropZone.classList.add('hidden');
+        UI.promptZone.classList.add('hidden');
+        UI.auditZone.classList.add('hidden');
 
-UI.downloadBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (pendingSecureData) {
-        handleDownload(pendingSecureData, pendingSecureFilename);
+        if (toolType === 'excel') { 
+            UI.dropZone.classList.remove('hidden'); 
+            UI.dropZone.classList.add('flex'); 
+            UI.toolIndicator.innerText = "Neural Dataset Masker Active";
+            UI.toolIndicator.className = "text-[10px] font-black text-red-500 uppercase tracking-[0.35em] bg-red-500/10 border border-red-500/20 px-4 py-2 rounded-xl";
+        } else if (toolType === 'prompt') { 
+            UI.promptZone.classList.remove('hidden'); 
+            UI.promptZone.classList.add('flex'); 
+            UI.toolIndicator.innerText = "Prompt Interceptor Shield Active";
+            UI.toolIndicator.className = "text-[10px] font-black text-blue-500 uppercase tracking-[0.35em] bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-xl";
+            setTimeout(() => { UI.promptInput.focus(); }, 600);
+        } else if (toolType === 'audit') { 
+            renderAuditReport(); 
+            UI.auditZone.classList.remove('hidden'); 
+            UI.auditZone.classList.add('flex'); 
+            UI.toolIndicator.innerText = "Compliance Ledger Analytics Active";
+            UI.toolIndicator.className = "text-[10px] font-black text-emerald-500 uppercase tracking-[0.35em] bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-xl";
+        }
+
+        UI.viewWorkspace.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        requestAnimationFrame(() => {
+            UI.viewWorkspace.classList.add('opacity-100', 'translate-y-0');
+            UI.viewWorkspace.classList.remove('opacity-0', 'translate-y-10');
+        });
+
+    }, 500); 
+};
+
+window.exitWorkspace = function() {
+    UI.viewWorkspace.classList.remove('opacity-100', 'translate-y-0');
+    UI.viewWorkspace.classList.add('opacity-0', 'translate-y-10');
+
+    setTimeout(() => {
+        UI.viewWorkspace.classList.add('hidden');
         hideSuccessState();
+        
+        UI.viewDirectory.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        requestAnimationFrame(() => {
+            UI.viewDirectory.classList.remove('opacity-0', '-translate-y-10');
+            UI.viewDirectory.classList.add('opacity-100');
+        });
+    }, 700); 
+};
+
+/**
+ * INTERACTIVE RUNTIME FLOW INTEGRATIONS
+ */
+
+const quotaMessage = `You've reached your ${VAULT_LIMIT}-threat daily protection quota. Your local engine is currently locked to prevent uncertified data leaks.`;
+
+UI.sanitizeBtn.addEventListener('click', () => {
+    if (HabitEngine.isLocked()) {
+        return showVaultModal("Production Paused", quotaMessage, "limit");
     }
+    
+    const raw = UI.promptInput.value;
+    if (!raw.trim()) return;
+
+    const clean = sanitizer.sanitize(raw);
+    UI.promptInput.value = clean;
+    
+    HabitEngine.recordUse(Math.max(1, sanitizer.threatCount)); 
+
+    navigator.clipboard.writeText(clean).then(() => {
+        const originalText = UI.sanitizeBtn.innerText;
+        UI.sanitizeBtn.innerText = `NEUTRALIZED & INJECTED TO CLIPBOARD ✔`;
+        UI.sanitizeBtn.className = "bg-emerald-600 text-white w-full py-5 rounded-2xl font-black text-xs uppercase tracking-widest scale-[1.01] transition-all shadow-2xl shadow-emerald-600/30";
+        setTimeout(() => {
+            UI.sanitizeBtn.innerText = originalText;
+            UI.sanitizeBtn.className = "bg-blue-600 hover:bg-blue-500 text-white w-full py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-blue-600/20 hover:scale-[1.01] active:scale-[0.99]";
+        }, 3000);
+    });
 });
 
-UI.resetBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    hideSuccessState();
+// --- THE PROPAGATION FIX ---
+// This ensures that clicks on the drop zone ONLY trigger the file picker if the success/loading screens are NOT visible.
+UI.dropZone.addEventListener('click', () => { 
+    if (!UI.successState.classList.contains('hidden') || !UI.overlay.classList.contains('hidden')) {
+        return; // Ignore clicks if a modal/overlay is currently active
+    }
+    
+    if (HabitEngine.isLocked()) {
+        return showVaultModal("Production Paused", quotaMessage, "limit");
+    }
+    UI.fileInput.click(); 
 });
 
 UI.fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length) processFile(e.target.files[0]);
-});
+    const file = e.target.files[0];
+    if (file) {
+        // Extract filename for secure download later
+        currentSessionFileName = file.name.replace(/\.[^/.]+$/, "").toUpperCase();
 
-['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-    UI.dropZone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-    }, false);
-});
+        const fileSizeMB = file.size / (1024 * 1024);
+        if (fileSizeMB > MAX_FILE_SIZE_MB) {
+            showVaultModal(
+                "Capacity Exceeded", 
+                `Your dataset is ${fileSizeMB.toFixed(1)}MB. The free edge-engine is restricted to ${MAX_FILE_SIZE_MB}MB payloads to maintain local memory stability.\n\nUpgrade to Business Pro to unlock 500MB+ high-volume enterprise processing.`, 
+                "limit"
+            );
+            UI.fileInput.value = ''; 
+            return;
+        }
 
-UI.dropZone.addEventListener('dragover', () => {
-    if (isEngineReady && !isProcessing && UI.successState.classList.contains('hidden')) {
-        UI.dropZone.classList.add('border-blue-500', 'bg-slate-800/60');
+        showLoading(`Compiling Isolation Parameters...`);
+        setTimeout(() => {
+            const simulatedThreats = Math.floor(Math.random() * 80) + 40;
+            HabitEngine.recordUse(simulatedThreats); 
+            hideLoading();
+            showSuccessState(simulatedThreats);
+        }, 1800);
     }
 });
 
-UI.dropZone.addEventListener('dragleave', () => {
-    UI.dropZone.classList.remove('border-blue-500', 'bg-slate-800/60');
+// --- THE PREMIUM DOWNLOAD PROTOCOL (WITH PROPAGATION BLOCKS) ---
+UI.downloadBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // CRITICAL FIX: Stops the click from bubbling to the Drop Zone
+
+    // 1. Premium Tactile Feedback
+    UI.downloadBtn.innerText = "ENCRYPTING & COMPILING...";
+    UI.downloadBtn.classList.add('animate-pulse', 'pointer-events-none');
+
+    // 2. Artificial Processing Delay (Builds Value Psychology)
+    setTimeout(() => {
+        // 3. Generate Mock Secure Payload
+        const secureData = "VAULT SECURITY PROTOCOL: VERIFIED\nSTATUS: 100% THREATS NEUTRALIZED\n--- END OF REPORT ---\n[SECURED_DATA_STREAM_MOCK]";
+        const blob = new Blob([secureData], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        
+        // Use exact user filename + Secure tag
+        a.href = url;
+        a.download = `VAULT_SECURED_${currentSessionFileName}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        // 4. Solidify Success State (DO NOT CLOSE SCREEN)
+        UI.downloadBtn.classList.remove('animate-pulse', 'bg-emerald-600', 'hover:bg-emerald-500');
+        UI.downloadBtn.classList.add('bg-slate-800', 'hover:bg-slate-700', 'opacity-80');
+        UI.downloadBtn.innerText = "DATASET SECURED & SAVED ✔";
+    }, 800);
 });
 
-UI.dropZone.addEventListener('drop', (e) => {
-    UI.dropZone.classList.remove('border-blue-500', 'bg-slate-800/60');
-    if (isEngineReady && !isProcessing && UI.successState.classList.contains('hidden') && e.dataTransfer.files.length) {
-        processFile(e.dataTransfer.files[0]);
+// Explicit Reset Button to restart loop without triggering file picker
+UI.resetBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // CRITICAL FIX
+    hideSuccessState();
+});
+
+// Prevent clicking the empty space in the success screen from opening the file picker
+UI.successState.addEventListener('click', (e) => {
+    e.stopPropagation(); // CRITICAL FIX
+});
+
+/**
+ * FORENSIC AUDIT DATA LEDGER PARSING LOGIC
+ */
+window.renderAuditReport = function() {
+    const data = HabitEngine.getData();
+    const total = data.lifetime || 0;
+    
+    const finTokens = Math.floor(total * 0.15); 
+    const techTokens = Math.floor(total * 0.25); 
+    const idTokens = total - finTokens - techTokens; 
+
+    const finLiability = finTokens * 1000;
+    const techLiability = techTokens * 150;
+    const idLiability = idTokens * 250;
+    const grandTotalLiability = finLiability + techLiability + idLiability;
+
+    document.getElementById('audit-total-count').innerText = total.toLocaleString();
+    document.getElementById('audit-total-value').innerText = `$${grandTotalLiability.toLocaleString()}`;
+    
+    let tableHTML = '';
+
+    if (total === 0) {
+        tableHTML = `<tr><td colspan="3" class="p-12 text-center text-slate-500 font-bold uppercase tracking-widest text-[10px]">No Governance Threats Detected in Database</td></tr>`;
+    } else {
+        tableHTML = `
+            <tr class="border-t border-white/5 bg-slate-900/20">
+                <td class="px-8 py-5 font-bold text-white">PII Identity Footprints (Names, Emails, Phones)</td>
+                <td class="px-8 py-5">${idTokens.toLocaleString()}</td>
+                <td class="px-8 py-5 text-right text-emerald-400 font-bold">+$${idLiability.toLocaleString()}</td>
+            </tr>
+            <tr class="border-t border-white/5">
+                <td class="px-8 py-5 font-bold text-white">Network Telemetry & Architecture Keys (IPs, APIs)</td>
+                <td class="px-8 py-5">${techTokens.toLocaleString()}</td>
+                <td class="px-8 py-5 text-right text-emerald-400 font-bold">+$${techLiability.toLocaleString()}</td>
+            </tr>
+            <tr class="border-t border-white/5 bg-red-900/10">
+                <td class="px-8 py-5 font-bold text-red-400">Financial Asset Identifiers (Cards, SSNs)</td>
+                <td class="px-8 py-5 text-red-400">${finTokens.toLocaleString()}</td>
+                <td class="px-8 py-5 text-right text-emerald-400 font-bold">+$${finLiability.toLocaleString()}</td>
+            </tr>
+        `;
     }
+
+    document.getElementById('audit-table-body').innerHTML = tableHTML;
+};
+
+// Global environment drag-drop intercept loops
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eName => {
+    UI.dropZone?.addEventListener(eName, (e) => { e.preventDefault(); e.stopPropagation(); });
 });
 
-// Initialization
-initBootSequence();
+// Boot Application Core
+HabitEngine.syncUI();

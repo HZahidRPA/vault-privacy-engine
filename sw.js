@@ -1,77 +1,66 @@
 /**
- * VAULT CACHE ENGINE - Service Worker v2.1
- * Strategy: Cache-First for Heavy Assets / Stale-While-Revalidate for UI
+ * iLoveVAULT - Service Worker
+ * Version: 8.0.0 (Billionaire Architecture)
+ * Strategy: Network-First (Eliminates the Caching Trap forever)
  */
 
-const CACHE_NAME = 'vault-protocol-v4-dark-apex';
+// Change this version name whenever you make a big update to force all users to get the new code
+const CACHE_NAME = 'ilovevault-v8-billionaire';
 
-// Assets that must be cached immediately for instant boot
+// Core assets required for the app to function instantly and offline
 const PRE_CACHE_ASSETS = [
-    './',
-    './index.html',
-    './script.js',
-    './vault-worker.js',
-    'https://cdn.tailwindcss.com'
+    '/',
+    '/index.html',
+    '/script.js',
+    '/vault-worker.js',
+    'https://cdn.tailwindcss.com',
+    'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js'
 ];
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
+            console.log('[iLoveVAULT] Pre-caching core assets...');
             return cache.addAll(PRE_CACHE_ASSETS);
-        })
+        }).then(() => self.skipWaiting()) // Forces the new worker to install immediately
     );
-    self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-    // Clear old versions of VAULT to free up user disk space
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames.map((name) => {
-                    if (name !== CACHE_NAME) return caches.delete(name);
+                    // Annihilate any cache that isn't the current V8 architecture
+                    if (name !== CACHE_NAME) {
+                        console.log('[iLoveVAULT] Purging old cache:', name);
+                        return caches.delete(name);
+                    }
                 })
             );
-        })
+        }).then(() => self.clients.claim()) // Takes control of the clients immediately
     );
-    self.skipWaiting();
 });
 
 self.addEventListener('fetch', (event) => {
+    // We only want to cache standard GET requests (like loading HTML/JS)
     if (event.request.method !== 'GET') return;
 
-    const url = event.request.url;
-
-    // STRATEGY: Cache-First for the Heavy Python Runtime (CDN)
-    // Once your friend downloads the 10MB Pyodide engine once, 
-    // he will NEVER have to wait for it again.
-    if (url.includes('cdn.jsdelivr.net') || url.includes('pyodide')) {
-        event.respondWith(
-            caches.match(event.request).then((cachedResponse) => {
-                if (cachedResponse) return cachedResponse;
-                
-                return fetch(event.request).then((networkResponse) => {
-                    return caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, networkResponse.clone());
-                        return networkResponse;
-                    });
+    // STRATEGY: Network-First, Fallback to Cache
+    // 1. Try to get the absolute newest file from the internet.
+    // 2. If successful, save a copy to the cache and show it to the user.
+    // 3. If the internet fails (offline), load the saved copy from the cache.
+    event.respondWith(
+        fetch(event.request)
+            .then((networkResponse) => {
+                return caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, networkResponse.clone());
+                    return networkResponse;
                 });
             })
-        );
-    } 
-    // STRATEGY: Stale-While-Revalidate for UI files
-    // Shows the app instantly, but updates it in the background if you push a fix.
-    else {
-        event.respondWith(
-            caches.match(event.request).then((cachedResponse) => {
-                const fetchPromise = fetch(event.request).then((networkResponse) => {
-                    return caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, networkResponse.clone());
-                        return networkResponse;
-                    });
-                });
-                return cachedResponse || fetchPromise;
+            .catch(() => {
+                console.log('[iLoveVAULT] Network unavailable, serving secured fallback from cache.');
+                return caches.match(event.request);
             })
-        );
-    }
+    );
 });
