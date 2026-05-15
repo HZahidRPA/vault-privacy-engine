@@ -5,7 +5,7 @@
  */
 
 // Single Source of Truth for Monetization Rules
-const VAULT_LIMIT = 5;
+const VAULT_LIMIT = 50;
 const MAX_FILE_SIZE_MB = 40;
 
 const UI = {
